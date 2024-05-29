@@ -106,11 +106,15 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
         {
             try
             {
+                #region Validation
+
                 if (string.IsNullOrEmpty(requestModel.Email))
                     return BadRequest("Email cannot be empty.");
 
                 if (string.IsNullOrEmpty(requestModel.Password))
                     return BadRequest("Password cannot be empty.");
+
+                #endregion
 
                 string query = @"SELECT [UserId]
       ,[FirstName]
@@ -133,10 +137,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
                 if (user.Rows.Count == 0)
                     return NotFound("User Not found.");
 
-                string jsonStr = JsonConvert.SerializeObject(user);
-                List<Users> lst = JsonConvert.DeserializeObject<List<Users>>(jsonStr)!;
-
-                return Ok(lst[0]);
+                return Ok(JsonConvert.SerializeObject(user));
             }
             catch (Exception ex)
             {
@@ -145,4 +146,3 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
         }
     }
 }
-
