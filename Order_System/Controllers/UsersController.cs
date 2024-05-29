@@ -19,7 +19,7 @@ namespace Order_System.Controllers
             _adoDotNetService = adoDotNetService;
         }
 
-        [HttpPost]
+        [HttpPost] 
         [Route("/api/account/register")]
 
         public IActionResult Register([FromBody] RegisterRequestModel requestModel)
