@@ -44,6 +44,8 @@ namespace Order_System.Controllers
 
                 #endregion
 
+                #region Email Duplicate Testing
+
                 string duplicateQuery = @"SELECT [UserId]
       ,[FirstName]
       ,[LastName]
@@ -62,6 +64,8 @@ namespace Order_System.Controllers
 
                 if (dt.Rows.Count > 0)
                     return Conflict("User with this email already exists!");
+
+                #endregion
 
                 string query = @"INSERT INTO [dbo].[Users]
            ([FirstName]
