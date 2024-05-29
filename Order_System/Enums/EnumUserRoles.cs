@@ -1,8 +1,7 @@
-﻿namespace Order_System.Enums
+﻿namespace Order_System.Enums;
+
+public enum EnumUserRoles
 {
-    public enum EnumUserRoles
-    {
-        None,
-        User
-    }
+    None,
+    User
 }
