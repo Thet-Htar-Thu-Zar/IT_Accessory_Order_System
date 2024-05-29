@@ -9,12 +9,12 @@ using Order_System.Enums;
 
 namespace Order_System.Controllers
 {
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IConfiguration _configuration;
         private readonly AdoDotNetService _adoDotNetService;
 
-        public UsersController(IConfiguration configuration, AdoDotNetService adoDotNetService)
+        public UserController(IConfiguration configuration, AdoDotNetService adoDotNetService)
         {
             _configuration = configuration;
             _adoDotNetService = adoDotNetService;
