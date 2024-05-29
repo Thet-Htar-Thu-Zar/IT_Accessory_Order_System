@@ -6,46 +6,46 @@ using Newtonsoft.Json;
 using Order_System.Enums;
 using Order_System.Models.User;
 
-namespace Order_System.Controllers
+namespace Order_System.Controllers;
+
+public class UserController : ControllerBase
 {
-    public class UserController : ControllerBase
+    private readonly AdoDotNetService _adoDotNetService;
+
+    public UserController(AdoDotNetService adoDotNetService)
     {
-        private readonly AdoDotNetService _adoDotNetService;
+        _adoDotNetService = adoDotNetService;
+    }
 
-        public UserController(AdoDotNetService adoDotNetService)
+    [HttpPost]
+    [Route("/api/account/register")]
+
+    public IActionResult Register([FromBody] RegisterRequestModel requestModel)
+    {
+        try
         {
-            _adoDotNetService = adoDotNetService;
-        }
+            #region Validation
 
-        [HttpPost]
-        [Route("/api/account/register")]
+            if (string.IsNullOrEmpty(requestModel.FirstName))
+                return BadRequest("FirstName cannot be empty.");
 
-        public IActionResult Register([FromBody] RegisterRequestModel requestModel)
-        {
-            try
-            {
-                #region Validation
+            if (string.IsNullOrEmpty(requestModel.LastName))
+                return BadRequest(" LastName cannot be empty.");
 
-                if (string.IsNullOrEmpty(requestModel.FirstName))
-                    return BadRequest("FirstName cannot be empty.");
+            if (string.IsNullOrEmpty(requestModel.Email))
+                return BadRequest("Email cannot be empty.");
 
-                if (string.IsNullOrEmpty(requestModel.LastName))
-                    return BadRequest(" LastName cannot be empty.");
+            if (string.IsNullOrEmpty(requestModel.PhoneNo))
+                return BadRequest("PhoneNumber cannot be empty.");
 
-                if (string.IsNullOrEmpty(requestModel.Email))
-                    return BadRequest("Email cannot be empty.");
+            if (string.IsNullOrEmpty(requestModel.Password))
+                return BadRequest("Password cannot be empty.");
 
-                if (string.IsNullOrEmpty(requestModel.PhoneNo))
-                    return BadRequest("PhoneNumber cannot be empty.");
+            #endregion
 
-                if (string.IsNullOrEmpty(requestModel.Password))
-                    return BadRequest("Password cannot be empty.");
+            #region Email Duplicate Testing
 
-                #endregion
-
-                #region Email Duplicate Testing
-
-                string duplicateQuery = @"SELECT [UserId]
+            string duplicateQuery = @"SELECT [UserId]
       ,[FirstName]
       ,[LastName]
       ,[Email]
@@ -54,21 +54,21 @@ namespace Order_System.Controllers
       ,[UserRole]
       ,[IsActive]
   FROM [dbo].[Users] WHERE Email = @Email AND IsActive = @IsActive";
-                List<SqlParameter> duplicateParams = new()
-                {
-                    new SqlParameter("@Email", requestModel.Email),
-                    new SqlParameter("@IsActive", true)
-                };
-                DataTable dt = _adoDotNetService.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
+            List<SqlParameter> duplicateParams = new()
+            {
+                new SqlParameter("@Email", requestModel.Email),
+                new SqlParameter("@IsActive", true)
+            };
+            DataTable dt = _adoDotNetService.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
 
-                if (dt.Rows.Count > 0)
-                    return Conflict("User with this email already exists!");
+            if (dt.Rows.Count > 0)
+                return Conflict("User with this email already exists!");
 
-                #endregion
+            #endregion
 
-                #region Register Case
+            #region Register Case
 
-                string query = @"INSERT INTO [dbo].[Users]
+            string query = @"INSERT INTO [dbo].[Users]
            ([FirstName]
            ,[LastName]
            ,[Email]
@@ -77,45 +77,45 @@ namespace Order_System.Controllers
            ,[UserRole]
            ,[IsActive])
 VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive)";
-                List<SqlParameter> parameters = new()
-                {
-                    new SqlParameter("@FirstName", requestModel.FirstName),
-                    new SqlParameter("@LastName", requestModel.LastName),
-                    new SqlParameter("@Email", requestModel.Email),
-                    new SqlParameter("@PhoneNo", requestModel.PhoneNo),
-                    new SqlParameter("@Password", requestModel.Password),
-                    new SqlParameter("@UserRole", EnumUserRoles.User.ToString()),
-                    new SqlParameter("@IsActive", true)
-                };
-                int result = _adoDotNetService.Execute(query, parameters.ToArray());
-
-                #endregion
-
-                return result > 0 ? StatusCode(201, "Registration Successful!") : BadRequest("Fail!");
-            }
-            catch (Exception ex)
+            List<SqlParameter> parameters = new()
             {
-                return BadRequest(ex.Message);
-            }
+                new SqlParameter("@FirstName", requestModel.FirstName),
+                new SqlParameter("@LastName", requestModel.LastName),
+                new SqlParameter("@Email", requestModel.Email),
+                new SqlParameter("@PhoneNo", requestModel.PhoneNo),
+                new SqlParameter("@Password", requestModel.Password),
+                new SqlParameter("@UserRole", EnumUserRoles.User.ToString()),
+                new SqlParameter("@IsActive", true)
+            };
+            int result = _adoDotNetService.Execute(query, parameters.ToArray());
+
+            #endregion
+
+            return result > 0 ? StatusCode(201, "Registration Successful!") : BadRequest("Fail!");
         }
-
-        [HttpPost]
-        [Route("/api/account/login")]
-        public IActionResult Login([FromBody] LoginRequestModel requestModel)
+        catch (Exception ex)
         {
-            try
-            {
-                #region Validation
+            return BadRequest(ex.Message);
+        }
+    }
 
-                if (string.IsNullOrEmpty(requestModel.Email))
-                    return BadRequest("Email cannot be empty.");
+    [HttpPost]
+    [Route("/api/account/login")]
+    public IActionResult Login([FromBody] LoginRequestModel requestModel)
+    {
+        try
+        {
+            #region Validation
 
-                if (string.IsNullOrEmpty(requestModel.Password))
-                    return BadRequest("Password cannot be empty.");
+            if (string.IsNullOrEmpty(requestModel.Email))
+                return BadRequest("Email cannot be empty.");
 
-                #endregion
+            if (string.IsNullOrEmpty(requestModel.Password))
+                return BadRequest("Password cannot be empty.");
 
-                string query = @"SELECT [UserId]
+            #endregion
+
+            string query = @"SELECT [UserId]
       ,[FirstName]
       ,[LastName]
       ,[Email]
@@ -124,24 +124,23 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
       ,[UserRole]
       ,[IsActive]
   FROM [dbo].[Users] WHERE Email = @Email AND IsActive = @IsActive AND Password = @Password && UserRole = @UserRole";
-                List<SqlParameter> parameters = new()
-                {
-                    new SqlParameter("@Email", requestModel.Email),
-                    new SqlParameter("@Password", requestModel.Password),
-                    new SqlParameter("@UserRole", EnumUserRoles.User.ToString()),
-                    new SqlParameter("@IsActive", true),
-                };
-                DataTable user = _adoDotNetService.QueryFirstOrDefault(query, parameters.ToArray());
-
-                if (user.Rows.Count == 0)
-                    return NotFound("User Not found.");
-
-                return Ok(JsonConvert.SerializeObject(user));
-            }
-            catch (Exception ex)
+            List<SqlParameter> parameters = new()
             {
-                return BadRequest(ex.Message);
-            }
+                new SqlParameter("@Email", requestModel.Email),
+                new SqlParameter("@Password", requestModel.Password),
+                new SqlParameter("@UserRole", EnumUserRoles.User.ToString()),
+                new SqlParameter("@IsActive", true),
+            };
+            DataTable user = _adoDotNetService.QueryFirstOrDefault(query, parameters.ToArray());
+
+            if (user.Rows.Count == 0)
+                return NotFound("User Not found.");
+
+            return Ok(JsonConvert.SerializeObject(user));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 }
