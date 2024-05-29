@@ -5,10 +5,11 @@ using Order_System.Service;
 using System.Data.SqlClient;
 using System.Data;
 using Newtonsoft.Json;
+using Order_System.Enums;
 
 namespace Order_System.Controllers
 {
-   public class UsersController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IConfiguration _configuration;
         private readonly AdoDotNetService _adoDotNetService;
@@ -51,16 +52,14 @@ namespace Order_System.Controllers
       ,[IsActive]
   FROM [dbo].[Users] WHERE Email = @Email AND IsActive = @IsActive";
                 List<SqlParameter> duplicateParams = new()
-            {
-                new SqlParameter("@Email", requestModel.Email),
-                new SqlParameter("@IsActive", true)
-            };
+                {
+                    new SqlParameter("@Email", requestModel.Email),
+                    new SqlParameter("@IsActive", true)
+                };
                 DataTable dt = _adoDotNetService.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
 
                 if (dt.Rows.Count > 0)
-                {
                     return Conflict("User with this email already exists!");
-                }
 
                 string query = @"INSERT INTO [dbo].[Users]
            ([FirstName]
@@ -72,15 +71,15 @@ namespace Order_System.Controllers
            ,[IsActive])
 VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive)";
                 List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@FirstName", requestModel.FirstName),
-                new SqlParameter("@LastName", requestModel.LastName),
-                new SqlParameter("@Email", requestModel.Email),
-                new SqlParameter("@PhoneNo", requestModel.PhoneNo),
-                new SqlParameter("@Password", requestModel.Password),
-                new SqlParameter("@UserRole", "user"),
-                new SqlParameter("@IsActive", true)
-            };
+                {
+                    new SqlParameter("@FirstName", requestModel.FirstName),
+                    new SqlParameter("@LastName", requestModel.LastName),
+                    new SqlParameter("@Email", requestModel.Email),
+                    new SqlParameter("@PhoneNo", requestModel.PhoneNo),
+                    new SqlParameter("@Password", requestModel.Password),
+                    new SqlParameter("@UserRole", EnumUserRoles.User.ToString()),
+                    new SqlParameter("@IsActive", true)
+                };
                 int result = _adoDotNetService.Execute(query, parameters.ToArray());
 
                 return result > 0 ? StatusCode(201, "Registration Successful!") : BadRequest("Fail!");
@@ -111,13 +110,14 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
       ,[Password]
       ,[UserRole]
       ,[IsActive]
-  FROM [dbo].[Users] WHERE Email = @Email AND IsActive = @IsActive AND Password = @Password";
+  FROM [dbo].[Users] WHERE Email = @Email AND IsActive = @IsActive AND Password = @Password && UserRole = @UserRole";
                 List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@Email", requestModel.Email),
-                new SqlParameter("@Password", requestModel.Password),
-                new SqlParameter("@IsActive", true),
-            };
+                {
+                    new SqlParameter("@Email", requestModel.Email),
+                    new SqlParameter("@Password", requestModel.Password),
+                    new SqlParameter("@UserRole", EnumUserRoles.User.ToString()),
+                    new SqlParameter("@IsActive", true),
+                };
                 DataTable user = _adoDotNetService.QueryFirstOrDefault(query, parameters.ToArray());
 
                 if (user.Rows.Count == 0)
@@ -134,5 +134,5 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
             }
         }
     }
-    }
+}
 
