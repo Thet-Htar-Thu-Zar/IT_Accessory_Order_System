@@ -11,12 +11,10 @@ namespace Order_System.Controllers
 {
     public class UserController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
         private readonly AdoDotNetService _adoDotNetService;
 
-        public UserController(IConfiguration configuration, AdoDotNetService adoDotNetService)
+        public UserController(AdoDotNetService adoDotNetService)
         {
-            _configuration = configuration;
             _adoDotNetService = adoDotNetService;
         }
 
@@ -27,6 +25,8 @@ namespace Order_System.Controllers
         {
             try
             {
+                #region Validation
+
                 if (string.IsNullOrEmpty(requestModel.FirstName))
                     return BadRequest("FirstName cannot be empty.");
 
@@ -41,6 +41,8 @@ namespace Order_System.Controllers
 
                 if (string.IsNullOrEmpty(requestModel.Password))
                     return BadRequest("Password cannot be empty.");
+
+                #endregion
 
                 string duplicateQuery = @"SELECT [UserId]
       ,[FirstName]
