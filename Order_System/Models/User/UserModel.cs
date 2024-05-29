@@ -1,6 +1,6 @@
-﻿namespace Order_System.Models
+﻿namespace Order_System.Models.User
 {
-    public class Users
+    public class UserModel
     {
         public long UserId { get; set; }
         public string FirstName { get; set; } = null!;

@@ -1,11 +1,13 @@
-﻿namespace Order_System.Models
+﻿using Order_System.Models.User;
+
+namespace Order_System.Models
 {
     public class Response
     {
         public int StatusCode { get; set; }
         public string StatusMessage { get; set; }
-        public List<Users> listUsers { get; set; }
-        public Users users { get; set; }
+        public List<UserModel> listUsers { get; set; }
+        public UserModel users { get; set; }
 
         public List<LoginRequestModel> loginRequests { get; set; }
         public LoginRequestModel loginRequest { get; set; }

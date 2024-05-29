@@ -1,11 +1,12 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using Order_System.Models.User;
 
 namespace Order_System.Models
 {
     public class Data
     {
-        public Response register (Users users, SqlConnection connection)
+        public Response register (UserModel users, SqlConnection connection)
         {
             try
             {
@@ -38,7 +39,7 @@ namespace Order_System.Models
             }
         }
 
-        public Response login(Users users, SqlConnection connection)
+        public Response login(UserModel users, SqlConnection connection)
         {
             try
             {

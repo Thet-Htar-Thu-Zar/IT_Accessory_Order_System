@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Order_System.Models;
 using Order_System.Service;
 using System.Data.SqlClient;
 using System.Data;
 using Newtonsoft.Json;
 using Order_System.Enums;
+using Order_System.Models.User;
 
 namespace Order_System.Controllers
 {
