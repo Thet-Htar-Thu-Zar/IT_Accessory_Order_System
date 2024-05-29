@@ -67,6 +67,8 @@ namespace Order_System.Controllers
 
                 #endregion
 
+                #region Register Case
+
                 string query = @"INSERT INTO [dbo].[Users]
            ([FirstName]
            ,[LastName]
@@ -87,6 +89,8 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
                     new SqlParameter("@IsActive", true)
                 };
                 int result = _adoDotNetService.Execute(query, parameters.ToArray());
+
+                #endregion
 
                 return result > 0 ? StatusCode(201, "Registration Successful!") : BadRequest("Fail!");
             }
