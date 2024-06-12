@@ -99,6 +99,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
         }
     }
 
+
     [HttpPost]
     [Route("/api/account/login")]
     public IActionResult Login([FromBody] LoginRequestModel requestModel)
@@ -123,7 +124,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
       ,[Password]
       ,[UserRole]
       ,[IsActive]
-  FROM [dbo].[Users] WHERE Email = @Email AND IsActive = @IsActive AND Password = @Password && UserRole = @UserRole";
+  FROM [dbo].[Users] WHERE Email = @Email AND IsActive = @IsActive AND Password = @Password AND UserRole = @UserRole";
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@Email", requestModel.Email),
@@ -143,4 +144,6 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
             return BadRequest(ex.Message);
         }
     }
+
+   
 }
