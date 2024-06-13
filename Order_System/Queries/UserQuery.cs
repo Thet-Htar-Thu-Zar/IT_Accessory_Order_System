@@ -21,8 +21,9 @@ UserId != @UserId";
 
         public static string UpdateUserQuery()
         {
-            return @"UPDATE Users SET FirstName = @FirstName  WHERE
-ExpenseCategoryId = @ExpenseCategoryId";
+            return @"UPDATE Users 
+                 SET FirstName = @FirstName, LastName = @LastName 
+                 WHERE UserId = @UserId";
         }
 
         #endregion

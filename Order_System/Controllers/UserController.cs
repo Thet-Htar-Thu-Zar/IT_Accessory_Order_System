@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Order_System.Enums;
 using Order_System.Models.User;
 using System.Text.RegularExpressions;
+using Order_System.Queries;
 
 namespace Order_System.Controllers;
 
@@ -48,7 +49,6 @@ public class UserController : ControllerBase
                 return BadRequest("PhoneNumber cannot be empty and must be 10 digits with an optional leading +.");
             }
 
-            // Validate password
             if (string.IsNullOrEmpty(requestModel.Password) ||
                 !(requestModel.Password.Length >= 8 && Regex.IsMatch(requestModel.Password, @"[!@#$%^&*()_+=\[{\]};:<>|./?,-]"))) //ThetHtar@8
             {
@@ -168,7 +168,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
             //if (string.IsNullOrEmpty(requestModel.ExpenseCategoryName))
             //    return BadRequest("Category name cannot be empty.");
 
-            string duplicateQuery = ExpenseCategoryQuery.CheckUpdateExpenseCategoryDuplicateQuery();
+            string duplicateQuery = UserQuery.CheckUpdateUserDuplicateQuery();
             List<SqlParameter> duplicateParams = new()
             {
                 new SqlParameter("@FirstName", requestModel.FirstName),
@@ -176,18 +176,18 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
                 new SqlParameter("@IsActive", true),
                 new SqlParameter("@UserId", id)
             };
-            DataTable dt = _service.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
+            DataTable dt = _adoDotNetService.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
             if (dt.Rows.Count > 0)
                 return Conflict("FirstName already exists."); 
 
-            string query = ExpenseCategoryQuery.UpdateExpenseCategoryQuery();
+            string query = UserQuery.UpdateUserQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@FirstName", requestModel.FirstName),
                 new SqlParameter("@LastName", requestModel.LastName),
                 new SqlParameter("@UserId", id)
             };
-            int result = _service.Execute(query, parameters.ToArray());
+            int result = _adoDotNetService.Execute(query, parameters.ToArray());
 
             return result > 0 ? StatusCode(202, "Updating Successful!") : BadRequest("Updating Fail!");
         }

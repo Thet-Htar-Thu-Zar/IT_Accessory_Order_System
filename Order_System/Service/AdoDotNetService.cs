@@ -65,6 +65,42 @@ public class AdoDotNetService
         conn.Close();
 
         return result;
+
+        //using SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
+        //conn.Open();
+        //using SqlTransaction transaction = conn.BeginTransaction();
+        //using SqlCommand cmd = new(query, conn, transaction);
+
+        //try
+        //{
+        //    if (parameters != null)
+        //    {
+        //        cmd.Parameters.AddRange(parameters);
+        //    }
+
+        //    int result = cmd.ExecuteNonQuery();
+        //    transaction.Commit();
+
+        //    return result;
+        //}
+        //catch
+        //{
+        //    try
+        //    {
+        //        transaction.Rollback();
+        //    }
+        //    catch (Exception rollbackEx)
+        //    {
+
+        //        throw new Exception("Transaction rollback failed.", rollbackEx);
+        //    }
+
+        //    throw; 
+        //}
+        //finally
+        //{
+        //    conn.Close();
+        //}
     }
 
     #endregion
