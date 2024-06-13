@@ -50,7 +50,7 @@ public class UserController : ControllerBase
 
             // Validate password
             if (string.IsNullOrEmpty(requestModel.Password) ||
-                !(requestModel.Password.Length >= 8 && Regex.IsMatch(requestModel.Password, @"[!@#$%^&*()_+=\[{\]};:<>|./?,-]"))) //P@ssw0rd! ThetHtar@8
+                !(requestModel.Password.Length >= 8 && Regex.IsMatch(requestModel.Password, @"[!@#$%^&*()_+=\[{\]};:<>|./?,-]"))) //ThetHtar@8
             {
                 return BadRequest("Password cannot be empty and must contain at least 8 characters including uppercase letters, lowercase letters, a number, and special characters.");
             }
