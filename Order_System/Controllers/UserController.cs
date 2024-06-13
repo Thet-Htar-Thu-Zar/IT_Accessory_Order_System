@@ -35,9 +35,7 @@ public class UserController : ControllerBase
                 return BadRequest(" LastName cannot be empty.");
 
             if (string.IsNullOrEmpty(requestModel.Email))
-                return BadRequest("Email cannot be empty.");
-
-           
+                return BadRequest("Email cannot be empty.");          
 
             //if (string.IsNullOrEmpty(requestModel.Password) && (requestModel.Password).Length >= 8 && Regex.IsMatch(requestModel.Password, @"[!@#$%^&*()_+=\[{\]};:<>|./?,-]")) //P@ssw0rd!
             //    return BadRequest("Password cannot be empty and Password contains uppercase letters, lowercase letters, a number and special characters");
