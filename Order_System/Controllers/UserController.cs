@@ -159,6 +159,42 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
         }
     }
 
+    [HttpPatch]
+    [Route("/api/account/{id}")]
+    public IActionResult UpdateAccount([FromBody] UpdateUserRequestModel requestModel, long id)
+    {
+        try
+        {
+            //if (string.IsNullOrEmpty(requestModel.ExpenseCategoryName))
+            //    return BadRequest("Category name cannot be empty.");
 
+            string duplicateQuery = ExpenseCategoryQuery.CheckUpdateExpenseCategoryDuplicateQuery();
+            List<SqlParameter> duplicateParams = new()
+            {
+                new SqlParameter("@FirstName", requestModel.FirstName),
+                new SqlParameter("@LastName", requestModel.LastName),
+                new SqlParameter("@IsActive", true),
+                new SqlParameter("@UserId", id)
+            };
+            DataTable dt = _service.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
+            if (dt.Rows.Count > 0)
+                return Conflict("FirstName already exists."); 
+
+            string query = ExpenseCategoryQuery.UpdateExpenseCategoryQuery();
+            List<SqlParameter> parameters = new()
+            {
+                new SqlParameter("@FirstName", requestModel.FirstName),
+                new SqlParameter("@LastName", requestModel.LastName),
+                new SqlParameter("@UserId", id)
+            };
+            int result = _service.Execute(query, parameters.ToArray());
+
+            return result > 0 ? StatusCode(202, "Updating Successful!") : BadRequest("Updating Fail!");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
 
 }
