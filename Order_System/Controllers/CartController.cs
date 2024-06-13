@@ -109,27 +109,27 @@ namespace Order_System.Controllers
         //    }
         //}
 
-        [HttpDelete]
-        [Route("/api/cart/{id}")]
-        public async Task<IActionResult> DeleteCart(long id)
-        {
-            var transaction = await _appDbContext.Database.BeginTransactionAsync();
-            try
-            {
-                if (id <= 0)
-                    return BadRequest();
+        //[HttpDelete]
+        //[Route("/api/cart/{id}")]
+        //public async Task<IActionResult> DeleteCart(long id)
+        //{
+        //    var transaction = await _appDbContext.Database.BeginTransactionAsync();
+        //    try
+        //    {
+        //        if (id <= 0)
+        //            return BadRequest();
 
-                #region Check Cart
+        //        #region Check Cart
 
                 
-                var cart = await _appDbContext.Expense
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.CartId == id && x.IsActive);
-                if (cart is null)
-                    return NotFound("Cart Not Found or Inactive.");
+        //        var cart = await _appDbContext.Expense
+        //            .AsNoTracking()
+        //            .FirstOrDefaultAsync(x => x.CartId == id && x.IsActive);
+        //        if (cart is null)
+        //            return NotFound("Cart Not Found or Inactive.");
 
-                #endregion
-            }
-        }
+        //        #endregion
+        //    }
+        //}
     }
 }
