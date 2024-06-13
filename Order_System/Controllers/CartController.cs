@@ -68,7 +68,7 @@ namespace Order_System.Controllers
         {
             try
             {
-                if (requestModel.AccessoryId == 0 || requestModel.Quantity == 0 || /*requestModel.TotalPrice == 0 ||*/ requestModel.UserId == 0 )
+                if (requestModel.AccessoryId == 0 || requestModel.Quantity == 0 || /*requestModel.TotalPrice == 0 ||*/ requestModel.UserId == 0)
                     return BadRequest();
 
                 string query = CartQuery.CreateCartQuery();
@@ -90,9 +90,46 @@ namespace Order_System.Controllers
             }
         }
         //[HttpPatch]
-        //[Route("")]
-        //public IActionResult UpdateOrder([FromBody] CartRequestModel requestModel)
+        //[Route("/api/cart/{id}")]
+
+        //public async Task<IActionResult> UpdateCart([FromBody] UpdateCartRequestModel requestModel, long id)
         //{
+        //    var transaction = await _appDbContext.Database.BeginTransactionAsync();
+        //    try
+        //    {
+        //        #region Check Cart
+
+        //        var cart = await _appDbContext.Expense
+        //            .AsNoTracking()
+        //            .FirstOrDefaultAsync(x => x.CartId == id && x.IsActive);
+        //        if (cart is null)
+        //            return NotFound("Cart Not Found or Inactive.");
+
+        //        #endregion
+        //    }
         //}
+
+        [HttpDelete]
+        [Route("/api/cart/{id}")]
+        public async Task<IActionResult> DeleteCart(long id)
+        {
+            var transaction = await _appDbContext.Database.BeginTransactionAsync();
+            try
+            {
+                if (id <= 0)
+                    return BadRequest();
+
+                #region Check Cart
+
+                
+                var cart = await _appDbContext.Expense
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.CartId == id && x.IsActive);
+                if (cart is null)
+                    return NotFound("Cart Not Found or Inactive.");
+
+                #endregion
+            }
+        }
     }
 }
