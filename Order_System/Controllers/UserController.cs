@@ -35,9 +35,7 @@ public class UserController : ControllerBase
                 return BadRequest(" LastName cannot be empty.");
 
             if (string.IsNullOrEmpty(requestModel.Email))
-                return BadRequest("Email cannot be empty.");          
-
-           
+                return BadRequest("Email cannot be empty.");                    
 
             if (string.IsNullOrEmpty(requestModel.PhoneNo) ||
         !(requestModel.PhoneNo.Length <= 13 && Regex.IsMatch(requestModel.PhoneNo, @"^\+\d{1,12}$")))
