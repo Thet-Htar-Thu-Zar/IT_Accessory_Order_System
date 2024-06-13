@@ -3,7 +3,6 @@
     public static class CartQuery
     {
         #region Get Cart List Query
-
         public static string GetCartListQuery()
         {
             return @"SELECT Cart.CartId, IT_accessories.AccessoryName,IT_accessories.AccessoryUnitPrice, Cart.Quantity,
