@@ -37,8 +37,7 @@ public class UserController : ControllerBase
             if (string.IsNullOrEmpty(requestModel.Email))
                 return BadRequest("Email cannot be empty.");
 
-            //if (string.IsNullOrEmpty(requestModel.PhoneNo) && (requestModel.PhoneNo).Length == 10 && Regex.IsMatch(requestModel.PhoneNo, @"^\+\d{10}$"))
-            //    return BadRequest("PhoneNumber cannot be empty.");
+           
 
             //if (string.IsNullOrEmpty(requestModel.Password) && (requestModel.Password).Length >= 8 && Regex.IsMatch(requestModel.Password, @"[!@#$%^&*()_+=\[{\]};:<>|./?,-]")) //P@ssw0rd!
             //    return BadRequest("Password cannot be empty and Password contains uppercase letters, lowercase letters, a number and special characters");
