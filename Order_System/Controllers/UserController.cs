@@ -190,5 +190,4 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
             throw new Exception(ex.Message);
         }
     }
-
 }
