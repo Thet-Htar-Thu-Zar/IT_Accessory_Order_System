@@ -153,13 +153,12 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
         }
     }
 
-    [HttpPatch]
+    [HttpPut]
     [Route("/api/account/{id}")]
     public IActionResult UpdateAccount([FromBody] UpdateUserRequestModel requestModel, long id)
     {
         try
-        {
-        
+        {       
             string duplicateQuery = UserQuery.CheckUpdateUserDuplicateQuery();
             List<SqlParameter> duplicateParams = new()
             {

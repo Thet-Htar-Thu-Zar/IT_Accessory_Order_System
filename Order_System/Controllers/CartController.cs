@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Order_System.Models.Cart;
+using Order_System.Models.User;
 using Order_System.Queries;
 using Order_System.Service;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace Order_System.Controllers
@@ -89,47 +91,5 @@ namespace Order_System.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        //[HttpPatch]
-        //[Route("/api/cart/{id}")]
-
-        //public async Task<IActionResult> UpdateCart([FromBody] UpdateCartRequestModel requestModel, long id)
-        //{
-        //    var transaction = await _appDbContext.Database.BeginTransactionAsync();
-        //    try
-        //    {
-        //        #region Check Cart
-
-        //        var cart = await _appDbContext.Expense
-        //            .AsNoTracking()
-        //            .FirstOrDefaultAsync(x => x.CartId == id && x.IsActive);
-        //        if (cart is null)
-        //            return NotFound("Cart Not Found or Inactive.");
-
-        //        #endregion
-        //    }
-        //}
-
-        //[HttpDelete]
-        //[Route("/api/cart/{id}")]
-        //public async Task<IActionResult> DeleteCart(long id)
-        //{
-        //    var transaction = await _appDbContext.Database.BeginTransactionAsync();
-        //    try
-        //    {
-        //        if (id <= 0)
-        //            return BadRequest();
-
-        //        #region Check Cart
-
-                
-        //        var cart = await _appDbContext.Expense
-        //            .AsNoTracking()
-        //            .FirstOrDefaultAsync(x => x.CartId == id && x.IsActive);
-        //        if (cart is null)
-        //            return NotFound("Cart Not Found or Inactive.");
-
-        //        #endregion
-        //    }
-        //}
     }
 }
