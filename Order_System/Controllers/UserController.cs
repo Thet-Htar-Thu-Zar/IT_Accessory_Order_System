@@ -159,9 +159,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
     {
         try
         {
-            //if (string.IsNullOrEmpty(requestModel.ExpenseCategoryName))
-            //    return BadRequest("Category name cannot be empty.");
-
+        
             string duplicateQuery = UserQuery.CheckUpdateUserDuplicateQuery();
             List<SqlParameter> duplicateParams = new()
             {
