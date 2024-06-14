@@ -2,7 +2,7 @@
 {
     public class UpdateUserRequestModel
     {
-        public string FirstName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
+        public string FirstName { get; set; }
+        public string Lastname { get; set; }
     }
 }

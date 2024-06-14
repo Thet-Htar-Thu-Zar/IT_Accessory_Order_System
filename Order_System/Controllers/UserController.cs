@@ -166,7 +166,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
             List<SqlParameter> duplicateParams = new()
             {
                 new SqlParameter("@FirstName", requestModel.FirstName),
-                new SqlParameter("@LastName", requestModel.LastName),
+                new SqlParameter("@LastName", requestModel.Lastname),
                 new SqlParameter("@IsActive", true),
                 new SqlParameter("@UserId", id)
             };
@@ -178,7 +178,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@FirstName", requestModel.FirstName),
-                new SqlParameter("@LastName", requestModel.LastName),
+                new SqlParameter("@LastName", requestModel.Lastname),
                 new SqlParameter("@UserId", id)
             };
             int result = _adoDotNetService.Execute(query, parameters.ToArray());

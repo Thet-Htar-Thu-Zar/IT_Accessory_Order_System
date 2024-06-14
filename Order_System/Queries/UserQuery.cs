@@ -10,7 +10,7 @@
       ,[FirstName]
       ,[LastName]
       ,[IsActive]
-  FROM [dbo].[Users] WHERE FirstName = @FirstName AND LastName = @LastName
+  FROM [dbo].[Users] WHERE FirstName = @FirstName AND LastName = @LastName AND
 IsActive = @IsActive AND
 UserId != @UserId";
         }
@@ -21,9 +21,8 @@ UserId != @UserId";
 
         public static string UpdateUserQuery()
         {
-            return @"UPDATE Users 
-                 SET FirstName = @FirstName, LastName = @LastName 
-                 WHERE UserId = @UserId";
+            return @"UPDATE Users SET FirstName = @FirstName, LastName = @LastName   WHERE
+UserId = @UserId";
         }
 
         #endregion
