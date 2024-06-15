@@ -50,13 +50,13 @@ public class UserController : ControllerBase
             if (userID <= 0)
                 return BadRequest("User Id cannot be empty.");
 
-            string query = CartQuery.GetIncomeListByUserIdQuery();
+            string query = UserQuery.GetUserListByUserIdQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@UserId", userID),
                 new SqlParameter("@IsActive", true)
             };
-            List<CartResponseModel> lst = _adoDotNetService.Query<CartResponseModel>(query, parameters.ToArray());
+            List<UserResponseModel> lst = _adoDotNetService.Query<UserResponseModel>(query, parameters.ToArray());
 
             return Ok(lst);
         }
