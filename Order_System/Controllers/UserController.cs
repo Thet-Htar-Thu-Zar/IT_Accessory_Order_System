@@ -154,7 +154,6 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
         }
     }
 
-
     [HttpPost]
     [Route("/api/account/login")]
     public IActionResult Login([FromBody] LoginRequestModel requestModel)
