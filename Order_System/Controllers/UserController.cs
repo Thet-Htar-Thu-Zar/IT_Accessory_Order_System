@@ -31,7 +31,7 @@ public class UserController : ControllerBase
             {
                 new SqlParameter("@IsActive", true)
             };
-            List<CartResponseModel> lst = _adoDotNetService.Query<CartResponseModel>(query, parameters.ToArray());
+            List<UserResponseModel> lst = _adoDotNetService.Query<UserResponseModel>(query, parameters.ToArray());
 
             return Ok(lst);
         }
@@ -42,8 +42,8 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    [Route("/api/cart/{userID}")]
-    public IActionResult GetIncomeListByUserId(long userID)
+    [Route("/api/user/{userID}")]
+    public IActionResult GetUserListByUserId(long userID)
     {
         try
         {
