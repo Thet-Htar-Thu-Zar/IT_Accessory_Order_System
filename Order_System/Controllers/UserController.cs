@@ -7,6 +7,7 @@ using Order_System.Enums;
 using Order_System.Models.User;
 using System.Text.RegularExpressions;
 using Order_System.Queries;
+using Order_System.Models.Cart;
 
 namespace Order_System.Controllers;
 
@@ -17,6 +18,52 @@ public class UserController : ControllerBase
     public UserController(AdoDotNetService adoDotNetService)
     {
         _adoDotNetService = adoDotNetService;
+    }
+
+    [HttpGet]
+    [Route("/api/user")]
+    public IActionResult GetList()
+    {
+        try
+        {
+            string query = UserQuery.GetUserListQuery();
+            List<SqlParameter> parameters = new()
+            {
+                new SqlParameter("@IsActive", true)
+            };
+            List<CartResponseModel> lst = _adoDotNetService.Query<CartResponseModel>(query, parameters.ToArray());
+
+            return Ok(lst);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("/api/cart/{userID}")]
+    public IActionResult GetIncomeListByUserId(long userID)
+    {
+        try
+        {
+            if (userID <= 0)
+                return BadRequest("User Id cannot be empty.");
+
+            string query = CartQuery.GetIncomeListByUserIdQuery();
+            List<SqlParameter> parameters = new()
+            {
+                new SqlParameter("@UserId", userID),
+                new SqlParameter("@IsActive", true)
+            };
+            List<CartResponseModel> lst = _adoDotNetService.Query<CartResponseModel>(query, parameters.ToArray());
+
+            return Ok(lst);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     [HttpPost]

@@ -2,6 +2,29 @@
 {
     public class UserQuery
     {
+
+        #region Get User List Query
+        public static string GetUserListQuery()
+        {
+            return @"SELECT UserId, FirstName, LastName, Email, PhoneNo, Password, IsActive 
+FROM Users
+WHERE IsActive = @IsActive";
+
+        }
+
+        #endregion
+
+        #region Get User List By UserId Query
+
+        public static string GetUserListByUserIdQuery()
+        {
+            return @"SELECT UserId, FirstName, LastName, Email, PhoneNo, Password, IsActive 
+FROM Users
+WHERE IsActive = @IsActive AND UserId = @UserId";
+        }
+
+        #endregion
+
         #region CheckUpdateUserDuplicateQuery
 
         public static string CheckUpdateUserDuplicateQuery()
