@@ -20,26 +20,26 @@ public class UserController : ControllerBase
         _adoDotNetService = adoDotNetService;
     }
 
-    [HttpGet]
-    [Route("/api/user")]
-    public IActionResult GetList()
-    {
-        try
-        {
-            string query = UserQuery.GetUserListQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IsActive", true)
-            };
-            List<UserResponseModel> lst = _adoDotNetService.Query<UserResponseModel>(query, parameters.ToArray());
+    //[HttpGet]
+    //[Route("/api/user")]
+    //public IActionResult GetList()
+    //{
+    //    try
+    //    {
+    //        string query = UserQuery.GetUserListQuery();
+    //        List<SqlParameter> parameters = new()
+    //        {
+    //            new SqlParameter("@IsActive", true)
+    //        };
+    //        List<UserResponseModel> lst = _adoDotNetService.Query<UserResponseModel>(query, parameters.ToArray());
 
-            return Ok(lst);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
-    }
+    //        return Ok(lst);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new Exception(ex.Message);
+    //    }
+    //}
 
     [HttpGet]
     [Route("/api/user/{userID}")]
