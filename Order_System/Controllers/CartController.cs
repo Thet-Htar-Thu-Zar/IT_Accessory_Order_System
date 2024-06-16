@@ -94,27 +94,25 @@ namespace Order_System.Controllers
 
         [HttpPut]
         [Route("/api/cart/{id}")]
-        public IActionResult UpdateCart([FromBody] UpdateUserRequestModel requestModel, long id)
+        public IActionResult UpdateCart([FromBody] UpdateCartRequestModel requestModel, long id)
         {
             try
             {
-                string duplicateQuery = UserQuery.CheckUpdateUserDuplicateQuery();
+                string duplicateQuery = CartQuery.CheckUpdateCartDuplicateQuery();
                 List<SqlParameter> duplicateParams = new()
             {
-                new SqlParameter("@FirstName", requestModel.FirstName),
-                new SqlParameter("@LastName", requestModel.Lastname),
+                new SqlParameter("@AccessoryName", requestModel.AccessoryName),
                 new SqlParameter("@IsActive", true),
-                new SqlParameter("@UserId", id)
+                new SqlParameter("@CartId", id)
             };
                 DataTable dt = _adoDotNetService.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
                 if (dt.Rows.Count > 0)
-                    return Conflict("Name already exists.");
+                    return Conflict("AccessoryName already exists.");
 
                 string query = UserQuery.UpdateUserQuery();
                 List<SqlParameter> parameters = new()
             {
-                new SqlParameter("@FirstName", requestModel.FirstName),
-                new SqlParameter("@LastName", requestModel.Lastname),
+                new SqlParameter("@AccessoryName", requestModel.AccessoryName),
                 new SqlParameter("@UserId", id)
             };
                 int result = _adoDotNetService.Execute(query, parameters.ToArray());

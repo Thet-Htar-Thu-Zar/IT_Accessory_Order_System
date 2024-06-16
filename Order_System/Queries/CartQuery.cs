@@ -42,7 +42,21 @@ VALUES (@AccessoryId, @UserId,@AccessoryName, @Quantity, @IsActive)";
 
         #endregion
 
-        #region UpdateUserQuery
+        #region CheckUpdateCartDuplicateQuery
+
+        public static string CheckUpdateCartDuplicateQuery()
+        {
+            return @"SELECT [CartId]
+      ,[AccessoryName]
+      ,[IsActive]
+  FROM [dbo].[Cart] WHERE AccessoryName = @AccessoryName
+IsActive = @IsActive AND
+CartId != @CartId";
+        }
+
+        #endregion
+
+        #region UpdateCartQuery
 
         public static string UpdateCartQuery()
         {
@@ -53,9 +67,9 @@ CartId = @CartId";
         #endregion
 
 
-        #region Delete User Query
+        #region Delete Cart Query
 
-        public static string DeleteUserQuery()
+        public static string DeleteCartQuery()
         {
             return @"UPDATE Cart SET IsActive = @IsActive WHERE CartId = @CartId";
         }
