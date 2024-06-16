@@ -11,7 +11,7 @@ FROM Cart
 INNER JOIN Users ON Cart.UserId = Users.UserId
 INNER JOIN IT_accessories ON Cart.AccessoryId = IT_accessories.AccessoryId
 WHERE Cart.IsActive = @IsActive
-ORDER BY CartId DESC"; 
+ORDER BY CartId DESC";
         }
 
         #endregion
@@ -38,6 +38,26 @@ ORDER BY CartId DESC";
         {
             return @"INSERT INTO Cart (AccessoryId, UserId,AccessoryName, Quantity, IsActive)
 VALUES (@AccessoryId, @UserId,@AccessoryName, @Quantity, @IsActive)";
+        }
+
+        #endregion
+
+        #region UpdateUserQuery
+
+        public static string UpdateCartQuery()
+        {
+            return @"UPDATE Cart SET AccessoryName = @AccessoryName WHERE
+CartId = @CartId";
+        }
+
+        #endregion
+
+
+        #region Delete User Query
+
+        public static string DeleteUserQuery()
+        {
+            return @"UPDATE Cart SET IsActive = @IsActive WHERE CartId = @CartId";
         }
 
         #endregion

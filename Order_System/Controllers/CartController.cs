@@ -91,5 +91,66 @@ namespace Order_System.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        [HttpPut]
+        [Route("/api/cart/{id}")]
+        public IActionResult UpdateCart([FromBody] UpdateUserRequestModel requestModel, long id)
+        {
+            try
+            {
+                string duplicateQuery = UserQuery.CheckUpdateUserDuplicateQuery();
+                List<SqlParameter> duplicateParams = new()
+            {
+                new SqlParameter("@FirstName", requestModel.FirstName),
+                new SqlParameter("@LastName", requestModel.Lastname),
+                new SqlParameter("@IsActive", true),
+                new SqlParameter("@UserId", id)
+            };
+                DataTable dt = _adoDotNetService.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
+                if (dt.Rows.Count > 0)
+                    return Conflict("Name already exists.");
+
+                string query = UserQuery.UpdateUserQuery();
+                List<SqlParameter> parameters = new()
+            {
+                new SqlParameter("@FirstName", requestModel.FirstName),
+                new SqlParameter("@LastName", requestModel.Lastname),
+                new SqlParameter("@UserId", id)
+            };
+                int result = _adoDotNetService.Execute(query, parameters.ToArray());
+
+                return result > 0 ? StatusCode(202, "Updating Successful!") : BadRequest("Updating Fail!");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+        [HttpDelete]
+        [Route("/api/user/{id}")]
+        public IActionResult DeleteUser(long id)
+        {
+            try
+            {
+                if (id == 0)
+                    return BadRequest();
+
+                string query = UserQuery.DeleteUserQuery();
+                List<SqlParameter> parameters = new()
+            {
+                new SqlParameter("@IsActive", false),
+                new SqlParameter("@UserId", id)
+            };
+                int result = _adoDotNetService.Execute(query, parameters.ToArray());
+
+                return result > 0 ? StatusCode(201, "Account Deleted!") : BadRequest("Deleting Fail!");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
