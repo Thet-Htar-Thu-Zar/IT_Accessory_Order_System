@@ -66,11 +66,11 @@ namespace Order_System.Controllers
 
         [HttpPost]
         [Route("/api/cart")]
-        public IActionResult CreateOrder([FromBody] CartRequestModel requestModel)
+        public IActionResult CreateCart([FromBody] CartRequestModel requestModel)
         {
             try
             {
-                if (requestModel.AccessoryId == 0 || requestModel.Quantity == 0 || /*requestModel.TotalPrice == 0 ||*/ requestModel.UserId == 0)
+                if (requestModel.AccessoryId == 0 || requestModel.Quantity == 0 || requestModel.UserId == 0)
                     return BadRequest();
 
                 string query = CartQuery.CreateCartQuery();
@@ -85,11 +85,13 @@ namespace Order_System.Controllers
                 int result = _adoDotNetService.Execute(query, parameters.ToArray());
 
                 return result > 0 ? StatusCode(201, "Cart Created!") : BadRequest("Creating Fail!");
+
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
+
         }
 
         [HttpPut]
@@ -97,23 +99,12 @@ namespace Order_System.Controllers
         public IActionResult UpdateCart([FromBody] UpdateCartRequestModel requestModel, long id)
         {
             try
-            {
-                string duplicateQuery = CartQuery.CheckUpdateCartDuplicateQuery();
-                List<SqlParameter> duplicateParams = new()
-            {
-                new SqlParameter("@AccessoryName", requestModel.AccessoryName),
-                new SqlParameter("@IsActive", true),
-                new SqlParameter("@CartId", id)
-            };
-                DataTable dt = _adoDotNetService.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
-                if (dt.Rows.Count > 0)
-                    return Conflict("AccessoryName already exists.");
-
-                string query = UserQuery.UpdateUserQuery();
+            { 
+                string query = CartQuery.UpdateCartQuery();
                 List<SqlParameter> parameters = new()
             {
-                new SqlParameter("@AccessoryName", requestModel.AccessoryName),
-                new SqlParameter("@UserId", id)
+                new SqlParameter("@Quantity", requestModel.Quantity),
+                new SqlParameter("@CartId", id)
             };
                 int result = _adoDotNetService.Execute(query, parameters.ToArray());
 
@@ -127,23 +118,23 @@ namespace Order_System.Controllers
 
 
         [HttpDelete]
-        [Route("/api/user/{id}")]
-        public IActionResult DeleteUser(long id)
+        [Route("/api/cart/{id}")]
+        public IActionResult DeleteCart(long id)
         {
             try
             {
                 if (id == 0)
                     return BadRequest();
 
-                string query = UserQuery.DeleteUserQuery();
+                string query = CartQuery.DeleteCartQuery();
                 List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@IsActive", false),
-                new SqlParameter("@UserId", id)
+                new SqlParameter("@CartId", id)
             };
                 int result = _adoDotNetService.Execute(query, parameters.ToArray());
 
-                return result > 0 ? StatusCode(201, "Account Deleted!") : BadRequest("Deleting Fail!");
+                return result > 0 ? StatusCode(201, "Cart Deleted!") : BadRequest("Deleting Fail!");
             }
             catch (Exception ex)
             {

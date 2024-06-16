@@ -2,6 +2,6 @@
 {
     public class UpdateCartRequestModel
     {
-        public string AccessoryName { get; set; } = null!;
+        public int Quantity { get; set; }
     }
 }

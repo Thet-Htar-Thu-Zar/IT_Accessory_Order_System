@@ -37,21 +37,7 @@ ORDER BY CartId DESC";
         public static string CreateCartQuery()
         {
             return @"INSERT INTO Cart (AccessoryId, UserId,AccessoryName, Quantity, IsActive)
-VALUES (@AccessoryId, @UserId,@AccessoryName, @Quantity, @IsActive)";
-        }
-
-        #endregion
-
-        #region CheckUpdateCartDuplicateQuery
-
-        public static string CheckUpdateCartDuplicateQuery()
-        {
-            return @"SELECT [CartId]
-      ,[AccessoryName]
-      ,[IsActive]
-  FROM [dbo].[Cart] WHERE AccessoryName = @AccessoryName
-IsActive = @IsActive AND
-CartId != @CartId";
+        VALUES (@AccessoryId, @UserId,@AccessoryName, @Quantity, @IsActive)";
         }
 
         #endregion
@@ -60,7 +46,7 @@ CartId != @CartId";
 
         public static string UpdateCartQuery()
         {
-            return @"UPDATE Cart SET AccessoryName = @AccessoryName WHERE
+            return @"UPDATE Cart SET Quantity = @Quantity WHERE
 CartId = @CartId";
         }
 
