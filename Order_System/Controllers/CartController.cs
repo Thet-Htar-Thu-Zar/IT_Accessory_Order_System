@@ -99,7 +99,7 @@ namespace Order_System.Controllers
         public IActionResult UpdateCart([FromBody] UpdateCartRequestModel requestModel, long id)
         {
             try
-            { 
+            {
                 string query = CartQuery.UpdateCartQuery();
                 List<SqlParameter> parameters = new()
             {
