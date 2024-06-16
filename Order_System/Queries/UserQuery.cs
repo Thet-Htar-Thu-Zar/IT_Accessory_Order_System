@@ -44,8 +44,18 @@ UserId != @UserId";
 
         public static string UpdateUserQuery()
         {
-            return @"UPDATE Users SET FirstName = @FirstName, LastName = @LastName   WHERE
+            return @"UPDATE Users SET FirstName = @FirstName, LastName = @LastName WHERE
 UserId = @UserId";
+        }
+
+        #endregion
+
+
+        #region Delete User Query
+
+        public static string DeleteUserQuery()
+        {
+            return @"UPDATE Users SET IsActive = @IsActive WHERE UserId = @UserId";
         }
 
         #endregion
