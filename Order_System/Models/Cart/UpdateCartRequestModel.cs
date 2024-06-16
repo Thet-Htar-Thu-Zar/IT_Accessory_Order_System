@@ -3,6 +3,5 @@
     public class UpdateCartRequestModel
     {
         public string AccessoryName { get; set; } = null!;
-   
     }
 }
