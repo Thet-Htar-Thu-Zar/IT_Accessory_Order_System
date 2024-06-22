@@ -12,7 +12,6 @@ namespace Order_System.Controllers
     public class CartController : ControllerBase
     {
         private readonly AdoDotNetService _adoDotNetService;
-
         public CartController(AdoDotNetService adoDotNetService)
         {
             _adoDotNetService = adoDotNetService;
