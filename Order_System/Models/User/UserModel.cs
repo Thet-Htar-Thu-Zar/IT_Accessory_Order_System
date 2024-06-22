@@ -1,5 +1,4 @@
 ﻿namespace Order_System.Models.User;
-
 public class UserModel
 {
     public long UserId { get; set; }

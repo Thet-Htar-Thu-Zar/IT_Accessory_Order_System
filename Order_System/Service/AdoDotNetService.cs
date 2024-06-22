@@ -6,9 +6,7 @@ namespace Order_System.Service;
 
 public class AdoDotNetService
 {
-
     private readonly IConfiguration _configuration;
-
     public AdoDotNetService(IConfiguration configuration)
     {
         _configuration = configuration;

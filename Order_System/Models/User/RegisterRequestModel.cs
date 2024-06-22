@@ -1,5 +1,4 @@
 ﻿namespace Order_System.Models.User;
-
 public class RegisterRequestModel
 {
     public string FirstName { get; set; } = null!;

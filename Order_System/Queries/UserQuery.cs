@@ -2,7 +2,6 @@
 {
     public class UserQuery
     {
-
         #region Get User List Query
         public static string GetUserListQuery()
         {
