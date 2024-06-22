@@ -50,7 +50,6 @@ namespace Order_System.Controllers
 
                     await detailCommand.ExecuteNonQueryAsync();
                 }
-
                 await transaction.CommitAsync();
                 return Ok(new { Message = "Order Successful!", order.OrderId });
 
