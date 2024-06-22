@@ -239,23 +239,6 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
     [Route("/api/user/{id}")]
     public IActionResult DeleteUser(long id)
     {
-        //try
-        //{
-        //    string query = UserQuery.DeleteUserQuery();
-        //    List<SqlParameter> parameters = new()
-        //    {
-        //        new SqlParameter("@IsActive", false),
-        //        new SqlParameter("@UserId", id)
-        //    };
-        //    int result = _adoDotNetService.Execute(query, parameters.ToArray());
-
-        //    return result > 0 ? StatusCode(201, "User Deleted!") : BadRequest("Deleting Fail!");
-        //}
-        //catch (Exception ex)
-        //{
-        //    throw new Exception(ex.Message);
-        //}
-
         try
         {
             if (id == 0)
