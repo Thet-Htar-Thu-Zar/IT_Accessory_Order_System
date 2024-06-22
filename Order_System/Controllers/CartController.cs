@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Order_System.Models.Cart;
-using Order_System.Models.User;
 using Order_System.Queries;
 using Order_System.Service;
 using System.Data;
