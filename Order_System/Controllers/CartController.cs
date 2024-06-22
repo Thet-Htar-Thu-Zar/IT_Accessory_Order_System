@@ -123,7 +123,7 @@ namespace Order_System.Controllers
             try
             {
                 if (id == 0)
-                    return BadRequest();
+                return BadRequest();
 
                 string query = CartQuery.DeleteCartQuery();
                 List<SqlParameter> parameters = new()
