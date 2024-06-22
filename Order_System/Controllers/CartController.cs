@@ -79,7 +79,7 @@ namespace Order_System.Controllers
                 new SqlParameter("@AccessoryId", requestModel.AccessoryId),
                 new SqlParameter("@UserId", requestModel.UserId),
                 new SqlParameter("@Quantity", requestModel.Quantity),
-                //new SqlParameter("@AccessoryName", requestModel.AccessoryName),
+                new SqlParameter("@AccessoryName", requestModel.AccessoryName),
                 new SqlParameter("@IsActive", true)
             };
                 int result = _adoDotNetService.Execute(query, parameters.ToArray());
