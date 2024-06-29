@@ -33,14 +33,14 @@ public class CartController : BaseController
 
     [HttpGet]
     [Route("/api/cart/{userID}")]
-    public IActionResult GetIncomeListByUserId(long userID)
+    public IActionResult GetCartListByUserId(long userID)
     {
         try
         {
             if (userID <= 0)
                 return BadRequest("User Id cannot be empty.");
 
-            string query = CartQuery.GetIncomeListByUserIdQuery();
+            string query = CartQuery.GetCartListByUserIdQuery();
             List<SqlParameter> parameters =
                 new() { new SqlParameter("@UserId", userID), new SqlParameter("@IsActive", true) };
             List<CartResponseModel> lst = _adoDotNetService.Query<CartResponseModel>(

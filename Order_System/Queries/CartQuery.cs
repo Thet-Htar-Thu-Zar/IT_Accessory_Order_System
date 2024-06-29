@@ -18,7 +18,7 @@ ORDER BY CartId DESC";
 
     #region Get Cart List By UserId Query
 
-    public static string GetIncomeListByUserIdQuery()
+    public static string GetCartListByUserIdQuery()
     {
         return @"SELECT Cart.CartId, IT_accessories.AccessoryName,IT_accessories.AccessoryUnitPrice, Cart.Quantity,
  Cart.IsActive
