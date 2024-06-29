@@ -1,12 +1,9 @@
-﻿using System.Data.SqlClient;
-using System.Data;
-using Newtonsoft.Json;
-
-namespace Order_System.Service;
+﻿namespace Order_System.Service;
 
 public class AdoDotNetService
 {
     private readonly IConfiguration _configuration;
+
     public AdoDotNetService(IConfiguration configuration)
     {
         _configuration = configuration;
@@ -53,7 +50,11 @@ public class AdoDotNetService
 
     #region Execute
 
-    public int Execute(string query, SqlParameter[]? parameters = null, SqlTransaction transaction = null)
+    public int Execute(
+        string query,
+        SqlParameter[]? parameters = null,
+        SqlTransaction transaction = null
+    )
     {
         SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
         conn.Open();

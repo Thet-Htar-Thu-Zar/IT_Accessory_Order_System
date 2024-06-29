@@ -1,142 +1,137 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Order_System.Models.Cart;
-using Order_System.Queries;
-using Order_System.Service;
-using System.Data;
-using System.Data.SqlClient;
+﻿namespace Order_System.Controllers;
 
-namespace Order_System.Controllers
+public class CartController : ControllerBase
 {
-    public class CartController : ControllerBase
+    private readonly AdoDotNetService _adoDotNetService;
+
+    public CartController(AdoDotNetService adoDotNetService)
     {
-        private readonly AdoDotNetService _adoDotNetService;
-        public CartController(AdoDotNetService adoDotNetService)
+        _adoDotNetService = adoDotNetService;
+    }
+
+    [HttpGet]
+    [Route("/api/cart")]
+    public IActionResult GetList()
+    {
+        try
         {
-            _adoDotNetService = adoDotNetService;
+            string query = CartQuery.GetCartListQuery();
+            List<SqlParameter> parameters = new() { new SqlParameter("@IsActive", true) };
+            List<CartResponseModel> lst = _adoDotNetService.Query<CartResponseModel>(
+                query,
+                parameters.ToArray()
+            );
+
+            return Ok(lst);
         }
-
-        [HttpGet]
-        [Route("/api/cart")]
-        public IActionResult GetList()
+        catch (Exception ex)
         {
-            try
-            {
-                string query = CartQuery.GetCartListQuery();
-                List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IsActive", true)
-            };
-                List<CartResponseModel> lst = _adoDotNetService.Query<CartResponseModel>(query, parameters.ToArray());
-
-                return Ok(lst);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            throw new Exception(ex.Message);
         }
+    }
 
-        [HttpGet]
-        [Route("/api/cart/{userID}")]
-        public IActionResult GetIncomeListByUserId(long userID)
+    [HttpGet]
+    [Route("/api/cart/{userID}")]
+    public IActionResult GetIncomeListByUserId(long userID)
+    {
+        try
         {
-            try
-            {
-                if (userID <= 0)
-                    return BadRequest("User Id cannot be empty.");
+            if (userID <= 0)
+                return BadRequest("User Id cannot be empty.");
 
-                string query = CartQuery.GetIncomeListByUserIdQuery();
-                List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@UserId", userID),
-                new SqlParameter("@IsActive", true)
-            };
-                List<CartResponseModel> lst = _adoDotNetService.Query<CartResponseModel>(query, parameters.ToArray());
+            string query = CartQuery.GetIncomeListByUserIdQuery();
+            List<SqlParameter> parameters =
+                new() { new SqlParameter("@UserId", userID), new SqlParameter("@IsActive", true) };
+            List<CartResponseModel> lst = _adoDotNetService.Query<CartResponseModel>(
+                query,
+                parameters.ToArray()
+            );
 
-                return Ok(lst);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return Ok(lst);
         }
-
-        [HttpPost]
-        [Route("/api/cart")]
-        public IActionResult CreateCart([FromBody] CartRequestModel requestModel)
+        catch (Exception ex)
         {
-            try
-            {
-                if (requestModel.AccessoryId == 0 || requestModel.Quantity == 0 || requestModel.UserId == 0)
-                    return BadRequest();
-
-                string query = CartQuery.CreateCartQuery();
-                List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@AccessoryId", requestModel.AccessoryId),
-                new SqlParameter("@UserId", requestModel.UserId),
-                new SqlParameter("@Quantity", requestModel.Quantity),
-                new SqlParameter("@AccessoryName", requestModel.AccessoryName),
-                new SqlParameter("@IsActive", true)
-            };
-                int result = _adoDotNetService.Execute(query, parameters.ToArray());
-
-                return result > 0 ? StatusCode(201, "Cart Created!") : BadRequest("Creating Fail!");
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
+            throw new Exception(ex.Message);
         }
+    }
 
-        [HttpPut]
-        [Route("/api/cart/{id}")]
-        public IActionResult UpdateCart([FromBody] UpdateCartRequestModel requestModel, long id)
+    [HttpPost]
+    [Route("/api/cart")]
+    public IActionResult CreateCart([FromBody] CartRequestModel requestModel)
+    {
+        try
         {
-            try
-            {
-                string query = CartQuery.UpdateCartQuery();
-                List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@Quantity", requestModel.Quantity),
-                new SqlParameter("@CartId", id)
-            };
-                int result = _adoDotNetService.Execute(query, parameters.ToArray());
-
-                return result > 0 ? StatusCode(202, "Updating Successful!") : BadRequest("Updating Fail!");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-
-        [HttpDelete]
-        [Route("/api/cart/{id}")]
-        public IActionResult DeleteCart(long id)
-        {
-            try
-            {
-                if (id == 0)
+            if (
+                requestModel.AccessoryId == 0
+                || requestModel.Quantity == 0
+                || requestModel.UserId == 0
+            )
                 return BadRequest();
 
-                string query = CartQuery.DeleteCartQuery();
-                List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IsActive", false),
-                new SqlParameter("@CartId", id)
-            };
-                int result = _adoDotNetService.Execute(query, parameters.ToArray());
+            string query = CartQuery.CreateCartQuery();
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@AccessoryId", requestModel.AccessoryId),
+                    new SqlParameter("@UserId", requestModel.UserId),
+                    new SqlParameter("@Quantity", requestModel.Quantity),
+                    new SqlParameter("@AccessoryName", requestModel.AccessoryName),
+                    new SqlParameter("@IsActive", true)
+                };
+            int result = _adoDotNetService.Execute(query, parameters.ToArray());
 
-                return result > 0 ? StatusCode(201, "Cart Deleted!") : BadRequest("Deleting Fail!");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return result > 0 ? StatusCode(201, "Cart Created!") : BadRequest("Creating Fail!");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    [HttpPut]
+    [Route("/api/cart/{id}")]
+    public IActionResult UpdateCart([FromBody] UpdateCartRequestModel requestModel, long id)
+    {
+        try
+        {
+            string query = CartQuery.UpdateCartQuery();
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@Quantity", requestModel.Quantity),
+                    new SqlParameter("@CartId", id)
+                };
+            int result = _adoDotNetService.Execute(query, parameters.ToArray());
+
+            return result > 0
+                ? StatusCode(202, "Updating Successful!")
+                : BadRequest("Updating Fail!");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    [HttpDelete]
+    [Route("/api/cart/{id}")]
+    public IActionResult DeleteCart(long id)
+    {
+        try
+        {
+            if (id == 0)
+                return BadRequest();
+
+            string query = CartQuery.DeleteCartQuery();
+            List<SqlParameter> parameters =
+                new() { new SqlParameter("@IsActive", false), new SqlParameter("@CartId", id) };
+            int result = _adoDotNetService.Execute(query, parameters.ToArray());
+
+            return result > 0 ? StatusCode(201, "Cart Deleted!") : BadRequest("Deleting Fail!");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
         }
     }
 }
