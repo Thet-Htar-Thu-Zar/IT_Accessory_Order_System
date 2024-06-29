@@ -1,6 +1,7 @@
-﻿namespace Order_System.Controllers;
+﻿
+namespace Order_System.Controllers;
 
-public class CartController : ControllerBase
+public class CartController : BaseController
 {
     private readonly AdoDotNetService _adoDotNetService;
 
@@ -22,11 +23,11 @@ public class CartController : ControllerBase
                 parameters.ToArray()
             );
 
-            return Ok(lst);
+            return Content(lst);
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            return InternalServerError(ex);
         }
     }
 
@@ -47,25 +48,27 @@ public class CartController : ControllerBase
                 parameters.ToArray()
             );
 
-            return Ok(lst);
+            return Content(lst);
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            return InternalServerError(ex);
         }
     }
 
     [HttpPost]
     [Route("/api/cart")]
-    public IActionResult CreateCart([FromBody] CartRequestModel requestModel)
+    public async Task<IActionResult> CreateCartAsync([FromBody] CartRequestModel requestModel)
     {
         try
         {
-            if (
-                requestModel.AccessoryId == 0
-                || requestModel.Quantity == 0
-                || requestModel.UserId == 0
-            )
+            if (requestModel.AccessoryId == 0)
+                return BadRequest();
+
+            if (requestModel.Quantity == 0)
+                return BadRequest();
+
+            if (requestModel.UserId == 0)
                 return BadRequest();
 
             string query = CartQuery.CreateCartQuery();
@@ -78,19 +81,19 @@ public class CartController : ControllerBase
                     new SqlParameter("@AccessoryName", requestModel.AccessoryName),
                     new SqlParameter("@IsActive", true)
                 };
-            int result = _adoDotNetService.Execute(query, parameters.ToArray());
+            int result = await _adoDotNetService.ExecuteAsync(query, parameters.ToArray());
 
-            return result > 0 ? StatusCode(201, "Cart Created!") : BadRequest("Creating Fail!");
+            return result > 0 ? Created("Cart Created!") : BadRequest("Creating Fail!");
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            return InternalServerError(ex);
         }
     }
 
     [HttpPut]
     [Route("/api/cart/{id}")]
-    public IActionResult UpdateCart([FromBody] UpdateCartRequestModel requestModel, long id)
+    public async Task<IActionResult> UpdateCartAsync([FromBody] UpdateCartRequestModel requestModel, long id)
     {
         try
         {
@@ -101,21 +104,21 @@ public class CartController : ControllerBase
                     new SqlParameter("@Quantity", requestModel.Quantity),
                     new SqlParameter("@CartId", id)
                 };
-            int result = _adoDotNetService.Execute(query, parameters.ToArray());
+            int result = await _adoDotNetService.ExecuteAsync(query, parameters.ToArray());
 
             return result > 0
-                ? StatusCode(202, "Updating Successful!")
+                ? Accepted("Updating Successful!")
                 : BadRequest("Updating Fail!");
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            return InternalServerError(ex);
         }
     }
 
     [HttpDelete]
     [Route("/api/cart/{id}")]
-    public IActionResult DeleteCart(long id)
+    public async Task<IActionResult> DeleteCartAsync(long id)
     {
         try
         {
@@ -125,13 +128,13 @@ public class CartController : ControllerBase
             string query = CartQuery.DeleteCartQuery();
             List<SqlParameter> parameters =
                 new() { new SqlParameter("@IsActive", false), new SqlParameter("@CartId", id) };
-            int result = _adoDotNetService.Execute(query, parameters.ToArray());
+            int result = await _adoDotNetService.ExecuteAsync(query, parameters.ToArray());
 
-            return result > 0 ? StatusCode(201, "Cart Deleted!") : BadRequest("Deleting Fail!");
+            return result > 0 ? Accepted("Cart Deleted!") : BadRequest("Deleting Fail!");
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            return InternalServerError(ex);
         }
     }
 }

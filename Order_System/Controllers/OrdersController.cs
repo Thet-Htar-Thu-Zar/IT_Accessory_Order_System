@@ -26,11 +26,26 @@ public class OrdersController : ControllerBase
                 "INSERT INTO [Order] (OrderDate, UserId, TotalAmount) VALUES (@OrderDate, @UserId, @TotalAmount); SELECT SCOPE_IDENTITY();";
             var orderCommand = new SqlCommand(query, connection, transaction);
 
-            orderCommand.Parameters.AddWithValue("@OrderDate", order.OrderDate);
-            orderCommand.Parameters.AddWithValue("@UserId", order.UserId);
-            orderCommand.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+            List<SqlParameter> orderParams = new()
+            {
+                new("@OrderDate", order.OrderDate),
+                new("@UserId", order.UserId),
+                new("@TotalAmount", order.TotalAmount),
+            };
+
+            //orderCommand.Parameters.AddWithValue("@OrderDate", order.OrderDate);
+            //orderCommand.Parameters.AddWithValue("@UserId", order.UserId);
+            //orderCommand.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+
+            orderCommand.Parameters.AddRange(orderParams.ToArray());
 
             order.OrderId = Convert.ToInt64(await orderCommand.ExecuteScalarAsync());
+
+            if (order.OrderId <= 0)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest("Fail to order.");
+            }
 
             foreach (var detail in order.OrderDetails)
             {
@@ -40,14 +55,30 @@ public class OrdersController : ControllerBase
                     transaction
                 );
 
-                detailCommand.Parameters.AddWithValue("@OrderId", order.OrderId);
-                detailCommand.Parameters.AddWithValue("@AccessoryId", detail.AccessoryId);
-                detailCommand.Parameters.AddWithValue("@UnitPrice", detail.UnitPrice);
-                detailCommand.Parameters.AddWithValue("@Quantity", detail.Quantity);
+                var orderDetailParams = new List<SqlParameter>
+                {
+                    new("@OrderId", order.OrderId),
+                    new("@AccessoryId", detail.AccessoryId),
+                    new("@UnitPrice", detail.UnitPrice),
+                    new("@Quantity", detail.Quantity),
+                };
 
-                await detailCommand.ExecuteNonQueryAsync();
+                //detailCommand.Parameters.AddWithValue("@OrderId", order.OrderId);
+                //detailCommand.Parameters.AddWithValue("@AccessoryId", detail.AccessoryId);
+                //detailCommand.Parameters.AddWithValue("@UnitPrice", detail.UnitPrice);
+                //detailCommand.Parameters.AddWithValue("@Quantity", detail.Quantity);
+
+                detailCommand.Parameters.AddRange(orderDetailParams.ToArray());
+
+                int result = await detailCommand.ExecuteNonQueryAsync();
+                if (result <= 0)
+                {
+                    await transaction.RollbackAsync();
+                    return BadRequest("Fail to order.");
+                }
             }
             await transaction.CommitAsync();
+
             return Ok(new { Message = "Order Successful!", order.OrderId });
         }
         catch (Exception ex)

@@ -1,4 +1,5 @@
-﻿namespace Order_System.Controllers;
+﻿
+namespace Order_System.Controllers;
 
 public class UserController : ControllerBase
 {
@@ -57,7 +58,7 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Route("/api/account/register")]
-    public IActionResult Register([FromBody] RegisterRequestModel requestModel)
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequestModel requestModel)
     {
         try
         {
@@ -151,7 +152,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
                     new SqlParameter("@UserRole", EnumUserRoles.User.ToString()),
                     new SqlParameter("@IsActive", true)
                 };
-            int result = _adoDotNetService.Execute(query, parameters.ToArray());
+            int result = await _adoDotNetService.ExecuteAsync(query, parameters.ToArray());
 
             #endregion
 
@@ -212,7 +213,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
 
     [HttpPut]
     [Route("/api/account/{id}")]
-    public IActionResult UpdateAccount([FromBody] UpdateUserRequestModel requestModel, long id)
+    public async Task<IActionResult> UpdateAccountAsync([FromBody] UpdateUserRequestModel requestModel, long id)
     {
         try
         {
@@ -240,7 +241,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
                     new SqlParameter("@LastName", requestModel.Lastname),
                     new SqlParameter("@UserId", id)
                 };
-            int result = _adoDotNetService.Execute(query, parameters.ToArray());
+            int result = await _adoDotNetService.ExecuteAsync(query, parameters.ToArray());
 
             return result > 0
                 ? StatusCode(202, "Updating Successful!")
@@ -254,7 +255,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
 
     [HttpDelete]
     [Route("/api/user/{id}")]
-    public IActionResult DeleteUser(long id)
+    public async Task<IActionResult> DeleteUserAsync(long id)
     {
         try
         {
@@ -264,7 +265,7 @@ VALUES (@FirstName, @LastName, @Email, @PhoneNo, @Password, @UserRole, @IsActive
             string query = UserQuery.DeleteUserQuery();
             List<SqlParameter> parameters =
                 new() { new SqlParameter("@IsActive", false), new SqlParameter("@UserId", id) };
-            int result = _adoDotNetService.Execute(query, parameters.ToArray());
+            int result = await _adoDotNetService.ExecuteAsync(query, parameters.ToArray());
 
             return result > 0 ? StatusCode(201, "Account Deleted!") : BadRequest("Deleting Fail!");
         }

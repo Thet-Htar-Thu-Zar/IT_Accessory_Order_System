@@ -1,4 +1,5 @@
-﻿namespace Order_System.Service;
+﻿
+namespace Order_System.Service;
 
 public class AdoDotNetService
 {
@@ -50,17 +51,17 @@ public class AdoDotNetService
 
     #region Execute
 
-    public int Execute(
+    public async Task<int> ExecuteAsync(
         string query,
         SqlParameter[]? parameters = null,
-        SqlTransaction transaction = null
+        SqlTransaction? transaction = null
     )
     {
         SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
         conn.Open();
         SqlCommand cmd = new(query, conn);
         cmd.Parameters.AddRange(parameters);
-        int result = cmd.ExecuteNonQuery();
+        int result = await cmd.ExecuteNonQueryAsync();
         conn.Close();
 
         return result;
